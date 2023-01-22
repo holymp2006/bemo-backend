@@ -17,32 +17,19 @@ class ColumnTest extends TestCase
 
         $response = $this->get('/api/v1/columns')
             ->assertStatus(200);
-        $response->dd();
         $response->assertJsonStructure([
             'data' => [
                 '*' => [
                     'id',
                     'type',
                     'attributes' => [
-                        'name',
-                        'description',
+                        'title',
                         'created_at',
                         'updated_at',
-                    ],
-                    'relationships' => [
-                        'tasks' => [
-                            'data' => [
-                                '*' => [
-                                    'id',
-                                    'type',
-                                ],
-                            ],
-                        ],
                     ],
                 ],
             ],
             'links' => [
-                'self',
                 'first',
                 'last',
                 'prev',
@@ -57,6 +44,54 @@ class ColumnTest extends TestCase
                 'to',
                 'total',
             ],
+        ]);
+    }
+    /**
+     * @test
+     * @group column
+     */
+    public function it_can_create_a_column()
+    {
+        $response = $this->post('/api/v1/columns', [
+            'data' => [
+                'type' => 'columns',
+                'attributes' => [
+                    'title' => 'Test Column',
+                ],
+            ],
+        ])->assertStatus(201);
+
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'type',
+                'attributes' => [
+                    'title',
+                    'created_at',
+                    'updated_at',
+                ],
+            ],
+        ]);
+        $this->assertDatabaseHas('columns', [
+            'id' => $response->json('data.id'),
+            'title' => $response->json('data.attributes.title'),
+        ]);
+    }
+    /**
+     * @test
+     * @group column
+     */
+    public function it_can_delete_a_column()
+    {
+        $column = Column::factory()->create();
+        $this->assertDatabaseHas('columns', [
+            'id' => $column->id,
+        ]);
+        $this->delete("/api/v1/columns/{$column->id}")
+            ->assertStatus(204);
+
+        $this->assertDatabaseMissing('columns', [
+            'id' => $column->id,
         ]);
     }
 }

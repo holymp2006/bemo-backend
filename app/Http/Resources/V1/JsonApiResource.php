@@ -6,12 +6,12 @@ namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\MissingValue;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\V1\JsonApiIdentifierResource;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Route;
 
 final class JsonApiResource extends JsonResource
 {

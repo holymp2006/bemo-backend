@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\V1\JsonApiResource;
@@ -77,8 +78,10 @@ class JsonApiService
         return response(null, 204);
     }
 
-    public function fetchRelationship(Model $model, string $relationship): JsonResource
-    {
+    public function fetchRelationship(
+        Model $model,
+        string $relationship
+    ): JsonResource {
         if ($model->$relationship instanceof Model) {
             return new JsonApiIdentifierResource($model->$relationship);
         }
@@ -104,8 +107,10 @@ class JsonApiService
         return response(null, 204);
     }
 
-    public function fetchRelated(Model $model, string $relationship): JsonApiResource|ResourceCollection
-    {
+    public function fetchRelated(
+        Model $model,
+        string $relationship
+    ): JsonApiResource|ResourceCollection {
         if ($model->$relationship instanceof Model) {
             return new JsonApiResource($model->$relationship);
         }
@@ -113,11 +118,17 @@ class JsonApiService
         return new JsonApiCollection($model->$relationship);
     }
 
-    protected function handleRelationship(array $relationships, Model $model): void
-    {
+    protected function handleRelationship(
+        array $relationships,
+        Model $model
+    ): void {
         foreach ($relationships as $relationshipName => $contents) {
             if ($model->$relationshipName() instanceof BelongsTo) {
-                $this->updateToOneRelationship($model, $relationshipName, $contents['data']['id']);
+                $this->updateToOneRelationship(
+                    $model,
+                    $relationshipName,
+                    $contents['data']['id']
+                );
             }
         }
 
@@ -127,10 +138,17 @@ class JsonApiService
     protected function jsonApiResourceWithLocation(
         Model $model
     ): JsonResponse {
-        return (new JsonApiResource($model))
-            ->response()
-            ->header('Location', route("{$model->type()}.show", [
-                Str::singular($model->type()) => $model,
-            ]));
+        $response =  (new JsonApiResource($model))
+            ->response();
+        if (Route::has("{$model->type()}.show")) {
+            return $response->header(
+                'Location',
+                route("{$model->type()}.show", [
+                    Str::singular($model->type()) => $model,
+                ])
+            );
+        }
+
+        return $response;
     }
 }

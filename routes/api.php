@@ -22,5 +22,7 @@ Route::prefix('columns')->group(function () {
     Route::controller(ColumnController::class)
         ->group(function (): void {
             Route::get('/', 'index')->name('columns.index');
+            Route::post('/', 'store')->name('columns.store');
+            Route::delete('/{column}', 'destroy')->name('columns.destroy');
         });
 });
