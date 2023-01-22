@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 abstract class JsonApiRequest extends FormRequest
 {
@@ -17,31 +16,40 @@ abstract class JsonApiRequest extends FormRequest
      */
     abstract public function rules(): array;
 
-    protected function prepareForValidation(): void
+    protected function mergeRules(array $rules): array
     {
-        $data = $this->data ?? null;
+        return array_merge($this->getDefaultRules(), $rules);
+    }
+    protected function getDefaultRules()
+    {
+        return [
+            'data' => 'required|array',
+            'data.id' => ($this->method() === 'PATCH') ? 'required|string' : 'string',
+            'data.type' => ['required', Rule::in(array_keys(
+                config('jsonapi.resources')
+            ))],
+            'data.attributes' => 'required|array',
 
-        $factory = $this->container->make(ValidationFactory::class);
-        $validator = $this->createDefaultValidator($factory);
+            'data.relationships' => 'array',
+            'data.relationships.*.data' => 'required|array',
 
-        if (is_null($data)) {
-            $validator->setRules([]); //to remove any other message from the messageBag
-            $validator->errors()->add('data', 'The given data was invalid.');
-            throw $this->failedValidation($validator);
-        }
-        if (!array_key_exists('type', $data)) {
-            $validator->setRules([]);
-            $validator->errors()->add('type', 'The given data has no type.');
-            throw $this->failedValidation($validator);
-        }
-        if (!array_key_exists('attributes', $data)) {
-            $validator->setRules([]);
-            $validator->errors()->add('attributes', 'The given data has no attributes.');
-            throw $this->failedValidation($validator);
-        }
-        $dataArray = (array) Arr::except($data, ['attributes']);
-        $attributes = (array) $data['attributes'];
+            'data.relationships.*.data.id' => [
+                Rule::requiredIf($this->has('data.relationships.*.data.type')),
+                'string'
+            ],
+            'data.relationships.*.data.type' => [
+                Rule::requiredIf($this->has('data.relationships.*.data.id')),
+                Rule::in(array_keys(config('jsonapi.resources')))
+            ],
 
-        $this->merge(array_merge($dataArray, $attributes));
+            'data.relationships.*.data.*.id' => [
+                Rule::requiredIf($this->has('data.relationships.*.data.0')),
+                'string'
+            ],
+            'data.relationships.*.data.*.type' => [
+                Rule::requiredIf($this->has('data.relationships.*.data.0')),
+                Rule::in(array_keys(config('jsonapi.resources')))
+            ],
+        ];
     }
 }

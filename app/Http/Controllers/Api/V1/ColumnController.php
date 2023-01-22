@@ -20,7 +20,7 @@ class ColumnController extends ApiController
     {
         return $this->service->createResource(
             Column::class,
-            $request->validated()
+            $request->input('data.attributes'),
         );
     }
     public function destroy(Column $column): Response

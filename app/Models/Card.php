@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-final class Column extends JsonApiModel
+final class Card extends JsonApiModel
 {
     use HasFactory;
     use HasUuids;
+    use SoftDeletes;
 
     protected $fillable = [
-        'title',
-    ];
-    protected $with = [
-        'cards',
+        'title', 'description', 'column_id',
     ];
 
     public function type(): string
@@ -25,8 +24,8 @@ final class Column extends JsonApiModel
         return $this->table;
     }
 
-    public function cards(): HasMany
+    public function column(): BelongsTo
     {
-        return $this->hasMany(Card::class);
+        return $this->belongsTo(Column::class);
     }
 }

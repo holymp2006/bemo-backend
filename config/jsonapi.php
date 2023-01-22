@@ -6,6 +6,19 @@ return [
     'resources' => [
         'columns' => [
             'allowedSorts' => [],
+            'allowedIncludes' => [
+                'cards',
+            ],
+            'allowedFilters' => [],
+            'relationships' => [
+                [
+                    'type' => 'cards',
+                    'method' => 'cards',
+                ]
+            ]
+        ],
+        'cards' => [
+            'allowedSorts' => [],
             'allowedIncludes' => [],
             'allowedFilters' => [],
             'relationships' => [

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-class CreateColumnRequest extends JsonApiRequest
+class CreateCardRequest extends JsonApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,6 +25,7 @@ class CreateColumnRequest extends JsonApiRequest
     {
         return $this->mergeRules([
             'data.attributes.title' => ['required', 'string', 'max:255'],
+            'data.attributes.description' => ['required', 'string'],
         ]);
     }
 }

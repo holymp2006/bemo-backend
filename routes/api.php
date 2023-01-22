@@ -26,3 +26,12 @@ Route::prefix('columns')->group(function () {
             Route::delete('/{column}', 'destroy')->name('columns.destroy');
         });
 });
+
+Route::prefix('cards')->group(function () {
+    Route::controller(CardController::class)
+        ->group(function (): void {
+            Route::get('/', 'index')->name('cards.index');
+            Route::post('/', 'store')->name('cards.store');
+            Route::delete('/{card}', 'destroy')->name('cards.destroy');
+        });
+});
