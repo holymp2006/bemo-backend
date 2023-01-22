@@ -78,6 +78,7 @@ class CardTest extends TestCase
                     'description',
                     'created_at',
                     'updated_at',
+                    'deleted_at'
                 ],
             ],
         ]);
@@ -107,6 +108,50 @@ class CardTest extends TestCase
 
         $this->assertSoftDeleted('cards', [
             'id' => $card->id,
+        ]);
+    }
+    /**
+     * @test
+     * @group card
+     */
+    public function it_can_update_a_card()
+    {
+        $column = Column::factory()->create();
+        $card = Card::factory()->create([
+            'column_id' => $column->id,
+        ]);
+        $this->assertDatabaseHas('cards', [
+            'id' => $card->id,
+            'title' => $card->title,
+        ]);
+        $response = $this->patch("/api/v1/cards/{$card->id}", [
+            'data' => [
+                'id' => $card->id,
+                'type' => 'cards',
+                'attributes' => [
+                    'title' => 'Updated Test Card',
+                    'description' => 'Updated Test Description',
+                ],
+            ],
+        ])->assertStatus(200);
+
+        $response->assertJsonStructure([
+            'data' => [
+                'id',
+                'type',
+                'attributes' => [
+                    'title',
+                    'description',
+                    'created_at',
+                    'updated_at',
+                    'deleted_at'
+                ],
+            ],
+        ]);
+        $this->assertDatabaseHas('cards', [
+            'id' => $response->json('data.id'),
+            'title' => 'Updated Test Card',
+            'description' => 'Updated Test Description',
         ]);
     }
 }

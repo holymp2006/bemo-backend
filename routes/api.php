@@ -23,7 +23,13 @@ Route::prefix('columns')->group(function () {
         ->group(function (): void {
             Route::get('/', 'index')->name('columns.index');
             Route::post('/', 'store')->name('columns.store');
-            Route::delete('/{column}', 'destroy')->name('columns.destroy');
+            Route::delete('{column}', 'destroy')->name('columns.destroy');
+        });
+    Route::controller(ColumnCardRelationshipController::class)
+        ->group(function (): void {
+            Route::get('{column}/relationships/cards', 'index')->name('columns.relationships.cards');
+            Route::patch('{column}/relationships/cards', 'update')->name('columns.relationships.cards');
+            Route::get('{column}/cards', 'indexRelated')->name('columns.cards');
         });
 });
 
@@ -32,6 +38,7 @@ Route::prefix('cards')->group(function () {
         ->group(function (): void {
             Route::get('/', 'index')->name('cards.index');
             Route::post('/', 'store')->name('cards.store');
-            Route::delete('/{card}', 'destroy')->name('cards.destroy');
+            Route::patch('{card}', 'update')->name('cards.update');
+            Route::delete('{card}', 'destroy')->name('cards.destroy');
         });
 });

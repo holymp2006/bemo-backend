@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 final class Card extends JsonApiModel
 {
@@ -18,6 +18,15 @@ final class Card extends JsonApiModel
     protected $fillable = [
         'title', 'description', 'column_id',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::created(function (self $model) {
+            $model->position = self::max('position') + 1;
+            $model->save();
+        });
+    }
 
     public function type(): string
     {

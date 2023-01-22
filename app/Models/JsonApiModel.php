@@ -20,12 +20,17 @@ abstract class JsonApiModel extends Model
         foreach ($this->appends as $append) {
             $appends[$append] = $this->{$append};
         }
-
-        return collect($this->attributes)->filter(function ($item, $key) {
-            return !collect($this->hidden)->contains($key) && $key !== 'id';
-        })->merge([
+        $dates = [
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-        ])->merge(collect($appends))->toArray();
+        ];
+        if (isset($this->deleted_at) || $this->deleted_at === null) {
+            $dates['deleted_at'] = $this->deleted_at;
+        }
+        return collect($this->attributes)->filter(function ($item, $key) {
+            return !collect($this->hidden)->contains($key) && $key !== 'id';
+        })->merge(collect($dates))
+            ->merge(collect($appends))
+            ->toArray();
     }
 }

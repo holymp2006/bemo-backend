@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('id')->primary()->unique();
             $table->string('title');
             $table->text('description');
+            $table->unsignedInteger('position')->default(0);
             $table->foreignUuid('column_id')
                 ->constrained('columns')
                 ->cascadeOnDelete();

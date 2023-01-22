@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\V1;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -56,13 +57,19 @@ final class JsonApiResource extends JsonResource
                 if (Route::has("{$this->type()}.relationships.{$relatedType}")) {
                     $return['links']['self'] = route(
                         "{$this->type()}.relationships.{$relatedType}",
-                        ['id' => $this->id]
+                        [
+                            'id' => $this->id,
+                            Str::singular($this->type()) => $this->id
+                        ]
                     );
                 }
                 if (Route::has("{$this->type()}.{$relatedType}")) {
                     $return['links']['related'] = route(
                         "{$this->type()}.{$relatedType}",
-                        ['id' => $this->id]
+                        [
+                            'id' => $this->id,
+                            Str::singular($this->type()) => $this->id
+                        ]
                     );
                 }
 

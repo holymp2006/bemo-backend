@@ -27,6 +27,14 @@ class ColumnTest extends TestCase
                         'created_at',
                         'updated_at',
                     ],
+                    'relationships' => [
+                        'cards' => [
+                            'links' => [
+                                'self',
+                                'related',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'links' => [
@@ -81,17 +89,27 @@ class ColumnTest extends TestCase
      * @test
      * @group column
      */
-    public function it_can_delete_a_column()
+    public function it_can_delete_a_column_and_related_cards()
     {
         $column = Column::factory()->create();
+        $card = $column->cards()->create([
+            'title' => 'Test Card',
+            'description' => 'Test Description',
+        ]);
         $this->assertDatabaseHas('columns', [
             'id' => $column->id,
+        ]);
+        $this->assertDatabaseHas('cards', [
+            'id' => $card->id,
         ]);
         $this->delete("/api/v1/columns/{$column->id}")
             ->assertStatus(204);
 
         $this->assertDatabaseMissing('columns', [
             'id' => $column->id,
+        ]);
+        $this->assertDatabaseMissing('cards', [
+            'id' => $card->id,
         ]);
     }
 }

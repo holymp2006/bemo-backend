@@ -8,7 +8,9 @@ use App\Models\Card;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CreateCardRequest;
+use App\Http\Requests\UpdateCardRequest;
 use App\Http\Resources\V1\JsonApiCollection;
+use App\Http\Resources\V1\JsonApiResource;
 
 class CardController extends ApiController
 {
@@ -21,6 +23,13 @@ class CardController extends ApiController
         return $this->service->createResource(
             Card::class,
             $request->input('data.attributes'),
+        );
+    }
+    public function update(UpdateCardRequest $request, Card $card): JsonApiResource
+    {
+        return $this->service->updateResource(
+            $card,
+            $request->input('data.attributes')
         );
     }
     public function destroy(Card $card): Response

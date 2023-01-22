@@ -107,6 +107,26 @@ class JsonApiService
         return response(null, 204);
     }
 
+    public function updateToManyRelationships(
+        Model $model,
+        string $relationship,
+        array $ids
+    ): Response {
+        $foreignKey = $model->$relationship()->getForeignKeyName();
+        $relatedModel = $model->$relationship()->getRelated();
+
+        $relatedModel->newQuery()->findOrFail($ids);
+
+        $relatedModel->newQuery()->where($foreignKey, $model->id)->update([
+            $foreignKey => null,
+        ]);
+        $relatedModel->newQuery()->whereIn('id', $ids)->update([
+            $foreignKey => $model->id,
+        ]);
+
+        return response(null, 204);
+    }
+    
     public function fetchRelated(
         Model $model,
         string $relationship
