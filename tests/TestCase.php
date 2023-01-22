@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -14,5 +14,8 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
         $this->seed();
+        $this->withMiddleware(
+            \App\Http\Middleware\AddAccessTokenToTest::class
+        );
     }
 }

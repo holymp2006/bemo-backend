@@ -23,7 +23,16 @@ final class Card extends JsonApiModel
     {
         parent::boot();
         static::created(function (self $model) {
+            $model->date = $model->created_at->format('Y-m-d');
             $model->position = self::max('position') + 1;
+            $model->save();
+        });
+        static::deleted(function (self $model) {
+            $model->status = 0;
+            $model->save();
+        });
+        static::restored(function (self $model) {
+            $model->status = 1;
             $model->save();
         });
     }

@@ -12,5 +12,6 @@ class ApiController extends Controller
     public function __construct(
         public JsonApiService $service
     ) {
+        // $this->middleware('auth:sanctum');
     }
 }

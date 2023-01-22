@@ -20,7 +20,10 @@ return [
         'cards' => [
             'allowedSorts' => [],
             'allowedIncludes' => [],
-            'allowedFilters' => [],
+            'allowedFilters' => [
+                'date',
+                'status',
+            ],
             'relationships' => [
                 []
             ]

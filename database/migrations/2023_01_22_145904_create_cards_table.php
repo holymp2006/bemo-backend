@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreignUuid('column_id')
                 ->constrained('columns')
                 ->cascadeOnDelete();
+            $table->date('date')->nullable();
+            $table->unsignedTinyInteger('status')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

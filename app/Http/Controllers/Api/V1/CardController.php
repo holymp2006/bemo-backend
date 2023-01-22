@@ -9,8 +9,8 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CreateCardRequest;
 use App\Http\Requests\UpdateCardRequest;
-use App\Http\Resources\V1\JsonApiCollection;
 use App\Http\Resources\V1\JsonApiResource;
+use App\Http\Resources\V1\JsonApiCollection;
 
 class CardController extends ApiController
 {

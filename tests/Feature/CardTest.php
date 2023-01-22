@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use App\Models\Card;
 use App\Models\Column;
+use Illuminate\Support\Carbon;
 
 class CardTest extends TestCase
 {
@@ -29,6 +30,8 @@ class CardTest extends TestCase
                     'attributes' => [
                         'title',
                         'description',
+                        'status',
+                        'date',
                         'created_at',
                         'updated_at',
                     ],
@@ -153,5 +156,23 @@ class CardTest extends TestCase
             'title' => 'Updated Test Card',
             'description' => 'Updated Test Description',
         ]);
+    }
+    /**
+     * @test
+     * @group card
+     */
+    public function it_can_filter_all_cards_by_date()
+    {
+        $column = Column::factory()->create();
+        Card::factory()->count(10)->create([
+            'column_id' => $column->id,
+        ]);
+        $card = Card::first();
+        $card->date = Carbon::now()->subDays(2)
+            ->format('Y-m-d');
+        $card->save();
+
+        $response = $this->get("/api/v1/cards?filter[date]={$card->date}")
+            ->assertStatus(200);
     }
 }
