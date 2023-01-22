@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('columns')->group(function () {
+    Route::controller(ColumnController::class)
+        ->group(function (): void {
+            Route::get('/', 'index')->name('columns.index');
+        });
+});
