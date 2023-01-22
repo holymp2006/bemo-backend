@@ -17,24 +17,20 @@ class AddFilters
     public function handle(Request $request, Closure $next)
     {
         // dd($request->route()->parameters());
-        // $all = $request->all();
-        // $filters = [];
-        // // if ($request->route()->hasParameter('chassis_number')) {
-        // //     $chassisNumber = $request->route()->parameter('chassis_number');
-        // //     $chassisNumber = $this->cleanChassisNumber($chassisNumber);
-        // //     $request->route()->setParameter('chassis_number', $chassisNumber);
-        // // }
-        // foreach ($all as $key => $value) {
-        //     if (in_array($key, [
-        //         'page', 'access_token',
-        //         '_token', 'limit', 'offset',
-        //         'sort', 'include', 'filter'
-        //     ])) {
-        //         continue;
-        //     }
-        //     $filters["filter[{$key}]"] = $value;
-        // }
-        // $request->merge($filters);
+        $all = $request->all();
+        $filters = [];
+
+        foreach ($all as $key => $value) {
+            if (in_array($key, [
+                'page', 'access_token',
+                '_token', 'limit', 'offset',
+                'sort', 'include', 'filter'
+            ])) {
+                continue;
+            }
+            $filters["filter[{$key}]"] = $value;
+        }
+        $request->merge($filters);
 
         return $next($request);
     }

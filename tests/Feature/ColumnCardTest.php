@@ -19,7 +19,7 @@ class ColumnCardTest extends TestCase
             'column_id' => $column->id,
         ]);
 
-        $response = $this->get("/api/v1/columns/{$column->id}/cards")
+        $response = $this->getJson("/api/v1/columns/{$column->id}/cards")
             ->assertStatus(200);
 
         $response->assertJsonStructure([
@@ -59,7 +59,7 @@ class ColumnCardTest extends TestCase
             'column_id' => $column->id,
         ]);
 
-        $this->patch("/api/v1/columns/{$column2->id}/relationships/cards", [
+        $this->patchJson("/api/v1/columns/{$column2->id}/relationships/cards", [
             'data' => [
                 [
                     'id' => $card->id,

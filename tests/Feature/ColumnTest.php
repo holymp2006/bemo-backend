@@ -15,7 +15,7 @@ class ColumnTest extends TestCase
     {
         Column::factory()->count(10)->create();
 
-        $response = $this->get('/api/v1/columns')
+        $response = $this->getJson('/api/v1/columns')
             ->assertStatus(200);
         $response->assertJsonStructure([
             'data' => [
@@ -60,7 +60,7 @@ class ColumnTest extends TestCase
      */
     public function it_can_create_a_column()
     {
-        $response = $this->post('/api/v1/columns', [
+        $response = $this->postJson('/api/v1/columns', [
             'data' => [
                 'type' => 'columns',
                 'attributes' => [
@@ -102,7 +102,7 @@ class ColumnTest extends TestCase
         $this->assertDatabaseHas('cards', [
             'id' => $card->id,
         ]);
-        $this->delete("/api/v1/columns/{$column->id}")
+        $this->deleteJson("/api/v1/columns/{$column->id}")
             ->assertStatus(204);
 
         $this->assertDatabaseMissing('columns', [

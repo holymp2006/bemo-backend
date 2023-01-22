@@ -20,7 +20,7 @@ class CardTest extends TestCase
             'column_id' => $column->id,
         ]);
 
-        $response = $this->get('/api/v1/cards')
+        $response = $this->getJson('/api/v1/cards')
             ->assertStatus(200);
         $response->assertJsonStructure([
             'data' => [
@@ -61,7 +61,7 @@ class CardTest extends TestCase
     public function it_can_create_a_card()
     {
         $column = Column::factory()->create();
-        $response = $this->post('/api/v1/cards', [
+        $response = $this->postJson('/api/v1/cards', [
             'data' => [
                 'type' => 'cards',
                 'attributes' => [
@@ -106,7 +106,7 @@ class CardTest extends TestCase
         $this->assertDatabaseHas('cards', [
             'id' => $card->id,
         ]);
-        $this->delete("/api/v1/cards/{$card->id}")
+        $this->deleteJson("/api/v1/cards/{$card->id}")
             ->assertStatus(204);
 
         $this->assertSoftDeleted('cards', [
@@ -127,7 +127,7 @@ class CardTest extends TestCase
             'id' => $card->id,
             'title' => $card->title,
         ]);
-        $response = $this->patch("/api/v1/cards/{$card->id}", [
+        $response = $this->patchJson("/api/v1/cards/{$card->id}", [
             'data' => [
                 'id' => $card->id,
                 'type' => 'cards',
@@ -172,7 +172,26 @@ class CardTest extends TestCase
             ->format('Y-m-d');
         $card->save();
 
-        $response = $this->get("/api/v1/cards?filter[date]={$card->date}")
+        $response = $this->getJson("/api/v1/cards?filter[date]={$card->date}")
             ->assertStatus(200);
+        $this->assertEquals($card->id, $response->json('data.0.id'));
+    }
+    /**
+     * @test
+     * @group card
+     */
+    public function it_can_filter_all_cards_by_status()
+    {
+        $column = Column::factory()->create();
+        Card::factory()->count(10)->create([
+            'column_id' => $column->id,
+        ]);
+        $card = Card::first();
+        $card->status = 0;
+        $card->save();
+
+        $response = $this->getJson("/api/v1/cards?filter[status]={$card->status}")
+            ->assertStatus(200);
+        $this->assertEquals($card->id, $response->json('data.0.id'));
     }
 }

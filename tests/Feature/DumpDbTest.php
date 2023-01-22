@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Models\User;
 
 class DumpDbTest extends TestCase
 {
@@ -12,7 +13,9 @@ class DumpDbTest extends TestCase
      */
     public function it_can_dump_the_database()
     {
-        $response = $this->get('/dump-db');
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+        $response = $this->get("/dump-db?access_token={$token}");
 
         $response->assertStatus(200);
         $response->assertDownload();
