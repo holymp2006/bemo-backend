@@ -33,10 +33,11 @@ GET /columns?access_token=212327873ixe
 
 #### Cards:
 
- - Get all cards: GET /cards
+ - Get all cards: GET /cards. Can filter by filter[date] and filter[status] parameters
  - Create a new card: POST /cards
  - Update a card: PATCH /cards/{card}
  - Delete a card: DELETE /cards/{card}
+ - Get all cards (not in JSON:API format): GET /list-cards. Can filter by 'date' and 'status' parameters
 
 ### Test
 php artisan test

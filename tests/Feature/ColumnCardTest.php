@@ -18,7 +18,9 @@ class ColumnCardTest extends TestCase
         Card::factory()->count(10)->create([
             'column_id' => $column->id,
         ]);
-
+        $this->assertDatabaseHas('cards', [
+            'column_id' => $column->id,
+        ]);
         $response = $this->getJson("/api/v1/columns/{$column->id}/cards")
             ->assertStatus(200);
 
@@ -30,17 +32,12 @@ class ColumnCardTest extends TestCase
                     'attributes' => [
                         'title',
                         'description',
-                        'column_id',
                         'created_at',
                         'updated_at',
                     ],
                 ],
             ],
         ]);
-        $this->assertEquals(
-            $response->json('data.0.attributes.column_id'),
-            $column->id
-        );
     }
 
     /**

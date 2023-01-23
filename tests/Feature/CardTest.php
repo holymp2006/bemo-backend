@@ -30,8 +30,6 @@ class CardTest extends TestCase
                     'attributes' => [
                         'title',
                         'description',
-                        'status',
-                        'date',
                         'created_at',
                         'updated_at',
                     ],
@@ -175,6 +173,10 @@ class CardTest extends TestCase
         $response = $this->getJson("/api/v1/cards?filter[date]={$card->date}")
             ->assertStatus(200);
         $this->assertEquals($card->id, $response->json('data.0.id'));
+
+        $response = $this->getJson("/api/v1/list-cards?date={$card->date}")
+            ->assertStatus(200);
+        $this->assertEquals($card->id, $response->json('0.id'));
     }
     /**
      * @test
@@ -193,5 +195,9 @@ class CardTest extends TestCase
         $response = $this->getJson("/api/v1/cards?filter[status]={$card->status}")
             ->assertStatus(200);
         $this->assertEquals($card->id, $response->json('data.0.id'));
+
+        $response = $this->getJson("/api/v1/list-cards?status={$card->status}")
+            ->assertStatus(200);
+        $this->assertEquals($card->id, $response->json('0.id'));
     }
 }

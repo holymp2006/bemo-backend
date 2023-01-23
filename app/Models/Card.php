@@ -18,6 +18,9 @@ final class Card extends JsonApiModel
     protected $fillable = [
         'title', 'description', 'column_id',
     ];
+    protected $hidden = [
+        'column_id', 'status', 'position', 'date',
+    ];
 
     public static function boot()
     {

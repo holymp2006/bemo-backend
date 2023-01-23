@@ -21,11 +21,11 @@ abstract class JsonApiModel extends Model
             $appends[$append] = $this->{$append};
         }
         $dates = [
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at?->toDateTimeString(),
+            'updated_at' => $this->updated_at?->toDateTimeString(),
         ];
         if (isset($this->deleted_at) || $this->deleted_at === null) {
-            $dates['deleted_at'] = $this->deleted_at;
+            $dates['deleted_at'] = $this->deleted_at?->toDateTimeString();
         }
         return collect($this->attributes)->filter(function ($item, $key) {
             return !collect($this->hidden)->contains($key) && $key !== 'id';

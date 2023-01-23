@@ -20,5 +20,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
             'password' => bcrypt(Str::random(16))
         ]);
+
+        $this->call([
+            CardSeeder::class,
+        ]);
     }
 }

@@ -11,6 +11,8 @@ use App\Http\Requests\CreateCardRequest;
 use App\Http\Requests\UpdateCardRequest;
 use App\Http\Resources\V1\JsonApiResource;
 use App\Http\Resources\V1\JsonApiCollection;
+use App\Services\CardService;
+use Illuminate\Http\Request;
 
 class CardController extends ApiController
 {
@@ -35,5 +37,11 @@ class CardController extends ApiController
     public function destroy(Card $card): Response
     {
         return $this->service->deleteResource($card);
+    }
+    public function indexOverride(
+        Request $request,
+        CardService $service
+    ): JsonResponse {
+        return $service->fetchResources($request->all());
     }
 }
