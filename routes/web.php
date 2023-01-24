@@ -14,6 +14,10 @@ use App\Http\Controllers\DumpDatabaseController;
 |
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Route::get('/dump-db', [DumpDatabaseController::class, 'index'])
     ->middleware('auth:sanctum')
     ->name('dump_db');
