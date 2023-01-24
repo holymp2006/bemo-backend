@@ -36,6 +36,7 @@ GET /columns?access_token=212327873ixe
  - Get all cards: GET /cards. Can filter by filter[date] and filter[status] parameters
  - Create a new card: POST /cards
  - Update a card: PATCH /cards/{card}
+ - Update multiple card: PATCH /cards. Specifically for updating order of multiple cards
  - Delete a card: DELETE /cards/{card}
  - Get all cards (not in JSON:API format): GET /list-cards. Can filter by 'date' and 'status' parameters
 
