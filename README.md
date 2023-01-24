@@ -6,6 +6,7 @@
 3. Set up .env
 4. Add sqlite database file to database folder (database/database.sqlite) Or use any other database
 5. php artisan migrate:fresh --seed
+6. php artisan issue:token to get token to use with application
 
 ### API Documentation
 
