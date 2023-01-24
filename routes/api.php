@@ -55,4 +55,5 @@ Route::controller(CardController::class)
     ->prefix('api')
     ->group(function (): void {
         Route::get('/list-cards', 'indexOverride')->name('cards.index.override');
+        Route::get('/test', 'test')->name('cards.test');
     });

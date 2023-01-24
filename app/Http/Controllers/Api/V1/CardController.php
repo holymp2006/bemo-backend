@@ -53,4 +53,32 @@ class CardController extends ApiController
             $request->validated('data')
         );
     }
+    public function test()
+    {
+        return [
+            'data' => [
+                [
+                    'id' => '1',
+                    'attributes' => [
+                        'column_id' => '1',
+                        'order' => 1,
+                    ],
+                ],
+                [
+                    'id' => '2',
+                    'attributes' => [
+                        'column_id' => '1',
+                        'order' => 2,
+                    ],
+                ],
+                [
+                    'id' => '3',
+                    'attributes' => [
+                        'column_id' => '1',
+                        'order' => 3,
+                    ],
+                ],
+            ],
+        ];
+    }
 }
