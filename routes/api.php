@@ -39,9 +39,9 @@ Route::prefix('api/v1')->group(function (): void {
             ->group(function (): void {
                 Route::get('/', 'index')->name('cards.index');
                 Route::post('/', 'store')->name('cards.store');
+                Route::patch('/', 'updateMultiple')->name('cards.update.multiple');
                 Route::patch('{card}', 'update')->name('cards.update');
                 Route::delete('{card}', 'destroy')->name('cards.destroy');
-                Route::get('/list-cards', 'indexOverride')->name('cards.index.override');
             });
     });
 

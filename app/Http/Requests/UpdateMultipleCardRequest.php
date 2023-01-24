@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-class UpdateCardRequest extends JsonApiRequest
+class UpdateMultipleCardRequest extends JsonApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,9 @@ class UpdateCardRequest extends JsonApiRequest
      */
     public function rules(): array
     {
-        return $this->mergeRules([
-            'data.attributes.title' => ['sometimes', 'required', 'string', 'max:255'],
-            'data.attributes.description' => ['sometimes', 'required', 'string'],
-            'data.attributes.order' => ['sometimes', 'required', 'integer'],
+        return $this->mergeMultipleRules([
+            'data.*.attributes.column_id' => ['sometimes', 'required', 'string'],
+            'data.*.attributes.order' => ['sometimes', 'required', 'integer'],
         ]);
     }
 }

@@ -18,7 +18,9 @@ return [
             ]
         ],
         'cards' => [
-            'allowedSorts' => [],
+            'allowedSorts' => [
+                'order'
+            ],
             'allowedIncludes' => [],
             'allowedFilters' => [
                 'date',

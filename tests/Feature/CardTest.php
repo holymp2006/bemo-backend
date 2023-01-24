@@ -200,4 +200,52 @@ class CardTest extends TestCase
             ->assertStatus(200);
         $this->assertEquals($card->id, $response->json('0.id'));
     }
+    /**
+     * @test
+     * @group card
+     * @group card_multiple
+     */
+    public function it_can_update_multiple_cards()
+    {
+        $column = Column::factory()->create();
+        $column2 = Column::factory()->create();
+        $cards = Card::factory()->count(10)->create([
+            'column_id' => $column->id,
+        ]);
+
+        $card2 = $cards[1];
+        $card3 = $cards[2];
+
+        $this->patchJson("/api/v1/cards", [
+            'data' => [
+                [
+                    'id' => $card2->id,
+                    'type' => 'cards',
+                    'attributes' => [
+                        'order' => 7,
+                        'column_id' => $column2->id,
+                    ],
+                ],
+                [
+                    'id' => $card3->id,
+                    'type' => 'cards',
+                    'attributes' => [
+                        'order' => 8,
+                        'column_id' => $column2->id,
+                    ],
+                ]
+            ],
+        ])->assertStatus(204);
+
+        $this->assertDatabaseHas('cards', [
+            'id' => $card2->id,
+            'order' => 7,
+            'column_id' => $column2->id,
+        ]);
+        $this->assertDatabaseHas('cards', [
+            'id' => $card3->id,
+            'order' => 8,
+            'column_id' => $column2->id,
+        ]);
+    }
 }

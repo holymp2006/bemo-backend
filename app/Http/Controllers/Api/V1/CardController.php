@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Models\Card;
+use Illuminate\Http\Request;
+use App\Services\CardService;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CreateCardRequest;
 use App\Http\Requests\UpdateCardRequest;
 use App\Http\Resources\V1\JsonApiResource;
 use App\Http\Resources\V1\JsonApiCollection;
-use App\Services\CardService;
-use Illuminate\Http\Request;
+use App\Http\Requests\UpdateMultipleCardRequest;
 
 class CardController extends ApiController
 {
@@ -43,5 +44,13 @@ class CardController extends ApiController
         CardService $service
     ): JsonResponse {
         return $service->fetchResources($request->all());
+    }
+    public function updateMultiple(
+        UpdateMultipleCardRequest $request,
+    ): Response {
+        return $this->service->updateMultipleResource(
+            Card::class,
+            $request->validated('data')
+        );
     }
 }

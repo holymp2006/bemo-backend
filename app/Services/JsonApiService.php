@@ -126,7 +126,7 @@ class JsonApiService
 
         return response(null, 204);
     }
-    
+
     public function fetchRelated(
         Model $model,
         string $relationship
@@ -136,6 +136,17 @@ class JsonApiService
         }
 
         return new JsonApiCollection($model->$relationship);
+    }
+    public function updateMultipleResource(
+        string $modelClass,
+        array $attributes
+    ): Response {
+        foreach ($attributes as $attribute) {
+            $model = $modelClass::findOrFail($attribute['id']);
+            $model->update($attribute['attributes']);
+        }
+
+        return response(null, 204);
     }
 
     protected function handleRelationship(

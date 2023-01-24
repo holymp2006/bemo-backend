@@ -52,4 +52,18 @@ abstract class JsonApiRequest extends FormRequest
             ],
         ];
     }
+    protected function mergeMultipleRules(array $rules): array
+    {
+        return array_merge($this->getDefaultMultipleRules(), $rules);
+    }
+    protected function getDefaultMultipleRules()
+    {
+        return [
+            'data.*.id' => ($this->method() === 'PATCH') ? 'required|string' : 'string',
+            'data.*.type' => ['required', Rule::in(array_keys(
+                config('jsonapi.resources')
+            ))],
+            'data.*.attributes' => 'required|array',
+        ];
+    }
 }
